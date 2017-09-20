@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">SuperCalc</string>
+
+    <!-- The resource strings for all the digits between 0 and 9, to be used if "translations" to other numbers systems becomes necessary -->
+    <string name="zero">0</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="four">4</string>
+    <string name="five">5</string>
+    <string name="six">6</string>
+    <string name="seven">7</string>
+    <string name="eight">8</string>
+    <string name="nine">9</string>
+
+
+    <!-- The resource strings for the operations(i.e., plus, minus, multipication, division -->
+    <string name="add">+</string>
+    <string name="sub">-</string>
+    <string name="mul">*</string>
+    <string name="div">/</string>
+
+    <!--Standard size for text on the calculator buttons-->
+    <string name="standardTextSize">25dp</string>
+
+    <!--Standard height for calculator buttons-->
+    <string name="standardButtonHeight">65dp</string>
+
+    <!--Offset from TextView to start of buttons-->
+    <string name="buttonOffset">50dp</string>
+
+    <!--String for the default display in the text view-->
+    <string name="defaultMessage">Enter numbers here</string>
+
+    <!--Strings for the trig functins-->
+    <string name="sin">sin</string>
+    <string name="cos">cos</string>
+    <string name="tan">tan</string>
+
+
+    <!--Strings for parentheses-->
+    <string name="left">(</string>
+    <string name="right">)</string>
+</resources>

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.aidanthegreat.supercalc.MainCalculatorv2">
+
+    <TextView
+        android:id="@+id/numbersView"
+        android:layout_width="335dp"
+        android:layout_height="50dp"
+        android:textSize="37dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    b<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/buttonOffset">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/calcColumnZero"
+            android:layout_weight="1">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:text="sin"
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="sinClick" />
+
+                <Button
+                    android:id="@+id/sevenButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:text="@string/seven"
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="sevenClick"/>
+
+                <Button
+                    android:id="@+id/fourButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:text="@string/four"
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="fourClick"/>
+
+                <Button
+                    android:id="@+id/oneButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:text="@string/one"
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="oneClick"/>
+
+                <Button
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/standardButtonHeight"
+                android:id="@+id/zeroButton"
+                android:text="0"
+                android:textSize="@dimen/standardTextSize"
+                android:onClick="zeroClick"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/calcColumnZero"
+            android:orientation="vertical"
+            android:id="@+id/calcColumOne"
+            android:layout_weight="1">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:text="cos"
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="cosClick"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:id="@+id/eightButton"
+                    android:text="@string/eight"
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="eightClick"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:id="@+id/fiveButton"
+                    android:text="@string/five"
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="fiveClick"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:id="@+id/twoButton"
+                    android:text="@string/two"
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="twoClick"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:text="."
+                    android:textSize="50dp"
+                    android:onClick="decimalClick"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/calcColumOne"
+            android:id="@+id/calcColumnTwo"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:text="tan"
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="tanClick"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:id="@+id/nineButton"
+                    android:text="@string/nine"
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="nineClick"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:id="@+id/sixButton"
+                    android:text="@string/six"
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="sixClick"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:id="@+id/threeButton"
+                    android:text="@string/three"
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="threeClick"/>
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:text="="
+                    android:textSize="40dp" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:text="del"
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="delClick"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toRightOf="@id/calcColumnTwo"
+            android:id="@+id/calcColumnThree">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:text="@string/add"
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="addClick"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:text="@string/sub"
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="subClick"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:text="@string/mul"
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="multClick"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:text="@string/div"
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="divClick"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:text="("
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="leftBracketClick" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:text=")"
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="rightBracketClick"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
