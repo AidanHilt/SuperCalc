@@ -144,6 +144,10 @@ public class MainCalculatorv2 extends AppCompatActivity {
         backspace();
     }
 
+    public void decimalClick(View v){
+        addTextInView(".");
+    }
+
     //-----------Convenience methods------------
     private int calcContentLast(){
         return calculationContents.size() -1;
