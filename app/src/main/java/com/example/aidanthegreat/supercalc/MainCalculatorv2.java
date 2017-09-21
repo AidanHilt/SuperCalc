@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -11,10 +12,13 @@ import java.util.ArrayList;
 public class MainCalculatorv2 extends AppCompatActivity {
 
     private static TextView numbersView;
+    private static Button exponentButton;
+    private static Button decimalButton;
 
     //Array that stores the contents of the TextView
     private static ArrayList<String> calculationContents = new ArrayList<String>();
 
+    private static boolean superScript = false;
     private static boolean quickDelete = false;
 
     //Method to build a string from an ArrayList
@@ -163,6 +167,14 @@ public class MainCalculatorv2 extends AppCompatActivity {
 
         //Programmatic representation of the TextView
         numbersView = (TextView)(findViewById(R.id.numbersView));
+
+        //Programmatic representation of the exponent button
+        exponentButton = (Button)(findViewById(R.id.exponentButton));
+        exponentButton.setText(Html.fromHtml("x<sup>y</sup>"));
+
+        //Programmatic representation of the decimal button
+        decimalButton = (Button)(findViewById(R.id.decimalButton));
+        decimalButton.setText(Html.fromHtml("<sup>.</sup>"));
 
         //Set the text view to have the default message
         calculationContents.add(getString(R.string.defaultMessage));

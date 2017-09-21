@@ -20,12 +20,6 @@
     <string name="mul">*</string>
     <string name="div">/</string>
 
-    <!--Standard size for text on the calculator buttons-->
-    <string name="standardTextSize">25dp</string>
-
-    <!--Standard height for calculator buttons-->
-    <string name="standardButtonHeight">65dp</string>
-
     <!--Offset from TextView to start of buttons-->
     <string name="buttonOffset">50dp</string>
 
@@ -41,4 +35,9 @@
     <!--Strings for parentheses-->
     <string name="left">(</string>
     <string name="right">)</string>
+
+    <!--String for the exponent button-->
+    <string name="exponentText">x<sup>y</sup></string>
+
+    <!--Strings for trig functions-->
 </resources>

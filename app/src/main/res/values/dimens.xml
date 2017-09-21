@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Standard size for text on the calculator buttons-->
-    <dimen name="standardTextSize">25dp</dimen>
+    <dimen name="standardTextSize">25sp</dimen>
 
     <!--Standard height for calculator buttons-->
-    <dimen name="standardButtonHeight">65dp</dimen>
+    <dimen name="standardButtonHeight">65sp</dimen>
 
     <!--Offset from TextView to start of buttons-->
-    <dimen name="buttonOffset">50dp</dimen>
+    <dimen name="buttonOffset">50sp</dimen>
 </resources>
