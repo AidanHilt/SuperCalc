@@ -36,15 +36,30 @@ public class MainCalculatorv2 extends AppCompatActivity {
     //Method to add text to the view
     private void addTextInView(String addedString){
         quickDelete = false;
-        if(calculationContents.size() != 0 && !calculationContents.get(0).equals("Enter numbers here")){
+        //Checks if the calculationContents is the right size, hen checks if the first one equals the default message. If neither condition is met, then we either
+        //set the 0th position to the new string, or add the new string to a 0-length calculationContents
+        if(calculationContents.size() != 0 && !calculationContents.get(0).equals("Enter numbers here") && !superScript){
+            //If the added item and the current item on the far right are both not operators, then we append the added string to the currently existing number
             if(!isOperator(addedString) && !isOperator(calculationContents.get(calcContentLast()))){
                 addedString = calculationContents.get(calcContentLast()) + addedString;
                 calculationContents.set(calcContentLast(), addedString);
-            }else{
+            }//Otherwise, add the operator
+            else{
                 calculationContents.add(addedString);
             }
-        }else if(calculationContents.size() != 0){
+        }
+        else if(calculationContents.size() != 0 && !calculationContents.get(0).equals("Enter numbers here") && superScript){
+            if(!isOperator(addedString) && !isOperator(calculationContents.get(calcContentLast() - 1))) {
+                addedString = calculationContents.get(calcContentLast() - 1) + addedString;
+                calculationContents.set(calcContentLast() - 1, addedString);
+            }else{
+                calculationContents.add(calcContentLast(), addedString);
+            }
+        }
+        //If the first item equals the default message, then we set the 0th position to the added string
+        else if(calculationContents.size() != 0){
             calculationContents.set(0, addedString);
+        //Otherwise, we add the new string to the 0-length calcContents
         }else{
             calculationContents.add(addedString);
         }
@@ -148,6 +163,18 @@ public class MainCalculatorv2 extends AppCompatActivity {
         addTextInView(".");
     }
 
+    public void exponentClick(View v){
+        addTextInView("<sup>");
+        addTextInView("</sup>");
+        superScript=true;
+    }
+
+    public void equalsClick(View v){
+        if(superScript){
+            superScript = false;
+        }
+    }
+
     //-----------Convenience methods------------
     private int calcContentLast(){
         return calculationContents.size() -1;
@@ -157,9 +184,11 @@ public class MainCalculatorv2 extends AppCompatActivity {
     private boolean isOperator(String value){
         if(value.equals("+") || value.equals("/") || value.equals("-") || value.equals("*")
                 || value.equals("sin") || value.equals("cos") || value.equals("tan")
-                || value.equals("(") || value.equals(")")){
+                || value.equals("(") || value.equals(")") || value.equals("<sup>")
+                || value.equals("</sup>")){
             return true;
-        }else{
+        }
+        else{
             return false;
         }
     }
