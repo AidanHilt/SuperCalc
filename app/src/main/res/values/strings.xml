@@ -39,5 +39,6 @@
     <!--String for the exponent button-->
     <string name="exponentText">x<sup>y</sup></string>
 
-    <!--Strings for trig functions-->
+    <!--String for sqrt-->
+    <string name="sqrt">\u221A</string>
 </resources>

@@ -63,12 +63,21 @@
                     android:onClick="oneClick"/>
 
                 <Button
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/standardButtonHeight"
-                android:id="@+id/zeroButton"
-                android:text="0"
-                android:textSize="@dimen/standardTextSize"
-                android:onClick="zeroClick"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:id="@+id/zeroButton"
+                    android:text="@string/zero"
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="zeroClick"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/standardButtonHeight"
+                    android:text="@string/sqrt"
+                    android:textSize="@dimen/standardTextSize"
+                    android:onClick="sqrtClick"/>
+
+
 
         </LinearLayout>
 

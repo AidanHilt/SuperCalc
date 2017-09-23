@@ -8,8 +8,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainCalculatorv2 extends AppCompatActivity {
+
+    private static String[] operatorsList = {"+", "-", "/", "*", "sin", "cos", "tan", "(", ")"};
 
     private static TextView numbersView;
     private static Button exponentButton;
@@ -20,6 +23,7 @@ public class MainCalculatorv2 extends AppCompatActivity {
 
     private static boolean superScript = false;
     private static boolean quickDelete = false;
+    private static boolean subScript = false;
 
     //Method to build a string from an ArrayList
     private static String buildString(ArrayList<String> a){
@@ -31,6 +35,22 @@ public class MainCalculatorv2 extends AppCompatActivity {
         }
 
         return string;
+    }
+
+    private static ArrayList<String> buildList(String s){
+        String copyString = s;
+        //Replaces the operators with properly spaced versions, so that the string can be split along spaces
+        for(String s1: operatorsList){
+            copyString = copyString.replace(s1, " "+ s1 + " ");
+        }
+
+        copyString = copyString.replace(">", "> ");
+        copyString = copyString.replace("</", " </");
+        copyString = copyString.replace("<s", " <s");
+
+        String[] stringList = copyString.split(" ");
+
+        return new ArrayList<String>(Arrays.asList(stringList));
     }
 
     //Method to add text to the view
@@ -48,7 +68,7 @@ public class MainCalculatorv2 extends AppCompatActivity {
                 calculationContents.add(addedString);
             }
         }
-        else if(calculationContents.size() != 0 && !calculationContents.get(0).equals("Enter numbers here") && superScript){
+        else if(calculationContents.size() != 0 && !calculationContents.get(0).equals("Enter numbers here") && superScript || subScript){
             if(!isOperator(addedString) && !isOperator(calculationContents.get(calcContentLast() - 1))) {
                 addedString = calculationContents.get(calcContentLast() - 1) + addedString;
                 calculationContents.set(calcContentLast() - 1, addedString);
@@ -172,7 +192,16 @@ public class MainCalculatorv2 extends AppCompatActivity {
     public void equalsClick(View v){
         if(superScript){
             superScript = false;
+        }else if(subScript){
+            subScript = false;
         }
+    }
+
+    public void sqrtClick(View v){
+        addTextInView(getString(R.string.sqrt));
+        addTextInView("<sub>");
+        addTextInView("</sub>");
+        subScript = true;
     }
 
     //-----------Convenience methods------------
@@ -185,7 +214,7 @@ public class MainCalculatorv2 extends AppCompatActivity {
         if(value.equals("+") || value.equals("/") || value.equals("-") || value.equals("*")
                 || value.equals("sin") || value.equals("cos") || value.equals("tan")
                 || value.equals("(") || value.equals(")") || value.equals("<sup>")
-                || value.equals("</sup>")){
+                || value.equals("</sup>") || value.equals("<sub>") || value.equals("</sub>")){
             return true;
         }
         else{
