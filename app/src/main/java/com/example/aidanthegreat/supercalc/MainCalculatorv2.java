@@ -1,10 +1,15 @@
 package com.example.aidanthegreat.supercalc;
 
+import android.content.Context;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -14,7 +19,7 @@ public class MainCalculatorv2 extends AppCompatActivity {
 
     private static String[] operatorsList = {"+", "-", "/", "*", "sin", "cos", "tan", "(", ")"};
 
-    private static TextView numbersView;
+    private static EditText numbersView;
     private static Button exponentButton;
     private static Button decimalButton;
 
@@ -22,7 +27,7 @@ public class MainCalculatorv2 extends AppCompatActivity {
     private static ArrayList<String> calculationContents = new ArrayList<String>();
 
     private static boolean superScript = false;
-    private static boolean quickDelete = false;
+    private static boolean quickDelete = true;
     private static boolean subScript = false;
 
     //Method to build a string from an ArrayList
@@ -228,7 +233,17 @@ public class MainCalculatorv2 extends AppCompatActivity {
         setContentView(R.layout.activity_main_calculatorv2);
 
         //Programmatic representation of the TextView
-        numbersView = (TextView)(findViewById(R.id.numbersView));
+        numbersView = (EditText)(findViewById(R.id.numbersView));
+
+
+        //Attempts to keep the keyboard from launching when the EditText is clicked
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            numbersView.setShowSoftInputOnFocus(false);
+        } else {
+            numbersView.setTextIsSelectable(true);
+            //N.B. Accepting the case when non editable text will be selectable
+        }
 
         //Programmatic representation of the exponent button
         exponentButton = (Button)(findViewById(R.id.exponentButton));
