@@ -1,16 +1,12 @@
 package com.example.aidanthegreat.supercalc;
 
-import android.content.Context;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +23,7 @@ public class MainCalculatorv2 extends AppCompatActivity {
     private static ArrayList<String> calculationContents = new ArrayList<String>();
 
     private static boolean superScript = false;
-    private static boolean quickDelete = true;
+    private static boolean instantDelete = true;
     private static boolean subScript = false;
 
     //Method to build a string from an ArrayList
@@ -36,13 +32,14 @@ public class MainCalculatorv2 extends AppCompatActivity {
 
         for(String s: a){
             string += s;
-            string += "|";
         }
 
         return string;
     }
 
-    private static ArrayList<String> buildList(String s){
+    //Builds an ArrayList out of a string, for the purpose of performing mathetmatical operations.
+    //As such, it separates at operators, so that all items are spaced out for a math algorithim
+    private static ArrayList<String> buildOperationList(String s){
         String copyString = s;
         //Replaces the operators with properly spaced versions, so that the string can be split along spaces
         for(String s1: operatorsList){
@@ -58,63 +55,61 @@ public class MainCalculatorv2 extends AppCompatActivity {
         return new ArrayList<String>(Arrays.asList(stringList));
     }
 
+    //Builds an ArrayList out of a string, for the purpose of character-by-character modification.
+    //As such, it splits along every character
+    private static ArrayList<String> buildModifierList(String s){
+        String[] modified = s.split("");
+        return new ArrayList<String>(Arrays.asList(modified));
+    }
+
     //Method to add text to the view
     private void addTextInView(String addedString){
-        quickDelete = false;
-        //Checks if the calculationContents is the right size, hen checks if the first one equals the default message. If neither condition is met, then we either
-        //set the 0th position to the new string, or add the new string to a 0-length calculationContents
-        if(calculationContents.size() != 0 && !calculationContents.get(0).equals("Enter numbers here") && !superScript){
-            //If the added item and the current item on the far right are both not operators, then we append the added string to the currently existing number
-            if(!isOperator(addedString) && !isOperator(calculationContents.get(calcContentLast()))){
-                addedString = calculationContents.get(calcContentLast()) + addedString;
-                calculationContents.set(calcContentLast(), addedString);
-            }//Otherwise, add the operator
-            else{
-                calculationContents.add(addedString);
-            }
-        }
-        else if(calculationContents.size() != 0 && !calculationContents.get(0).equals("Enter numbers here") && superScript || subScript){
-            if(!isOperator(addedString) && !isOperator(calculationContents.get(calcContentLast() - 1))) {
-                addedString = calculationContents.get(calcContentLast() - 1) + addedString;
-                calculationContents.set(calcContentLast() - 1, addedString);
-            }else{
-                calculationContents.add(calcContentLast(), addedString);
-            }
-        }
-        //If the first item equals the default message, then we set the 0th position to the added string
-        else if(calculationContents.size() != 0){
-            calculationContents.set(0, addedString);
-        //Otherwise, we add the new string to the 0-length calcContents
+        instantDelete = false;
+
+        if(numbersView.getText().equals(getString(R.string.defaultMessage)) || numbersView.getText().equals("")){
+            numbersView.setText(addedString);
         }else{
-            calculationContents.add(addedString);
+            ArrayList<String> modifiedList = buildModifierList(numbersView.getText().toString());
+            if(modifiedList.size() != 0) {
+                modifiedList.add(numbersView.getSelectionStart() + 1, addedString);
+            }else{
+                modifiedList.add(addedString);
+                numbersView.setSelection(2);
+            }
+
+            String finalAdded = buildString(modifiedList);
+
+            numbersView.setText(Html.fromHtml(finalAdded));
+            numbersView.setSelection(finalAdded.length() - 1);
         }
 
-        updateTextView();
-     }
+    }
 
     //Method to delete an item from the view
     private void backspace(){
-        if(calculationContents.size() != 0){
-            if(!isOperator(calculationContents.get(calcContentLast())) && calculationContents.get(calcContentLast()).length() > 0 && !quickDelete){
-                String s = calculationContents.get(calcContentLast());
-                calculationContents.set(calcContentLast(), s.substring(0, s.length() - 1));
-            }
-            else{
-                calculationContents.remove(calcContentLast());
-            }
+        String finalModified = "";
+
+        int finalPosition = numbersView.getSelectionStart();
+        if(finalPosition <= 0){
+            finalPosition = 1;
         }
-        else{
-            calculationContents.add(getString(R.string.defaultMessage));
-            quickDelete = true;
+
+        if(!instantDelete){
+            ArrayList<String> modifiedList = buildModifierList(numbersView.getText().toString());
+            modifiedList.remove(numbersView.getSelectionStart());
+            finalModified = buildString(modifiedList);
+            numbersView.setSelection(finalPosition);
+            System.out.println(numbersView.getSelectionStart());
         }
-        updateTextView();
+
+        numbersView.setText(Html.fromHtml(finalModified));
     }
+
 
     //Method to update the text being displayed in the TextView, in order to sync it with the contents of
     //calculationContents
     private void updateTextView(){
         numbersView.setText(Html.fromHtml(buildString(calculationContents)));
-        System.out.println(buildString(calculationContents));
     }
 
     //-------------------Number button click methods----------------------
@@ -213,6 +208,7 @@ public class MainCalculatorv2 extends AppCompatActivity {
     private int calcContentLast(){
         return calculationContents.size() -1;
     }
+
     //Determine if a string is an operator or a number
     //TODO Add determination for if a string is a trig function
     private boolean isOperator(String value){
@@ -237,13 +233,14 @@ public class MainCalculatorv2 extends AppCompatActivity {
 
 
         //Attempts to keep the keyboard from launching when the EditText is clicked
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             numbersView.setShowSoftInputOnFocus(false);
         } else {
             numbersView.setTextIsSelectable(true);
             //N.B. Accepting the case when non editable text will be selectable
         }
+
+
 
         //Programmatic representation of the exponent button
         exponentButton = (Button)(findViewById(R.id.exponentButton));
@@ -257,6 +254,7 @@ public class MainCalculatorv2 extends AppCompatActivity {
         calculationContents.add(getString(R.string.defaultMessage));
 
         updateTextView();
+
     }
 
 }
