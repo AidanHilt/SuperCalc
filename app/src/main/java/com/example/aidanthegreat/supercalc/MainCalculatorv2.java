@@ -4,6 +4,10 @@ import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.SuperscriptSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +18,7 @@ import java.util.Arrays;
 public class MainCalculatorv2 extends AppCompatActivity {
 
     private static String[] operatorsList = {"+", "-", "/", "*", "sin", "cos", "tan", "(", ")"};
+    private static ArrayList<int[]> superscriptArray = new ArrayList<>();
 
     private static EditText numbersView;
     private static Button exponentButton;
@@ -25,6 +30,9 @@ public class MainCalculatorv2 extends AppCompatActivity {
     private static boolean superScript = false;
     private static boolean instantDelete = true;
     private static boolean subScript = false;
+
+    //Storage for numberView contents, necessary because it does not preserve HTML tags when they are added to the view
+    private static String textViewContents = "";
 
     //Method to build a string from an ArrayList
     private static String buildString(ArrayList<String> a){
@@ -43,7 +51,7 @@ public class MainCalculatorv2 extends AppCompatActivity {
         String copyString = s;
         //Replaces the operators with properly spaced versions, so that the string can be split along spaces
         for(String s1: operatorsList){
-            copyString = copyString.replace(s1, " "+ s1 + " ");
+            copyString = copyString.replace(s1, " " + s1 + " ");
         }
 
         copyString = copyString.replace(">", "> ");
@@ -65,51 +73,52 @@ public class MainCalculatorv2 extends AppCompatActivity {
     //Method to add text to the view
     private void addTextInView(String addedString){
         instantDelete = false;
+        int finalPosition = numbersView.getSelectionStart() + 1;
 
-        if(numbersView.getText().equals(getString(R.string.defaultMessage)) || numbersView.getText().equals("")){
-            numbersView.setText(addedString);
+        ArrayList<String> modifier = buildModifierList(numbersView.getText().toString());
+
+        if(inSuperscript(numbersView.getSelectionStart())){
+            modifier.add(numbersView.getSelectionStart() + 1, addedString);
+            int newIndex = getRange(numbersView.getSelectionStart());
+            superscriptArray.get(newIndex)[1] = superscriptArray.get(newIndex)[1] + 1;
         }else{
-            ArrayList<String> modifiedList = buildModifierList(numbersView.getText().toString());
-            if(modifiedList.size() != 0) {
-                modifiedList.add(numbersView.getSelectionStart() + 1, addedString);
-            }else{
-                modifiedList.add(addedString);
-                numbersView.setSelection(2);
-            }
-
-            String finalAdded = buildString(modifiedList);
-
-            numbersView.setText(Html.fromHtml(finalAdded));
-            numbersView.setSelection(finalAdded.length() - 1);
+            modifier.add(numbersView.getSelectionStart() + 1, addedString);
         }
 
-    }
+        updateNumbersView(buildString(modifier));
+        if(numbersView.getText().toString().length() > 0){
+            numbersView.setSelection(finalPosition, finalPosition);
+        }
+
+
+        }
 
     //Method to delete an item from the view
     private void backspace(){
         String finalModified = "";
+        int finalPosition =  numbersView.getSelectionStart() - 1; //numbersView.getSelectionStart();
 
-        int finalPosition = numbersView.getSelectionStart();
-        if(finalPosition <= 0){
-            finalPosition = 1;
+        if(finalPosition < 0){
+            finalPosition = 0;
         }
 
-        if(!instantDelete){
+        if(!instantDelete && !inSuperscript(numbersView.getSelectionStart())){
             ArrayList<String> modifiedList = buildModifierList(numbersView.getText().toString());
             modifiedList.remove(numbersView.getSelectionStart());
             finalModified = buildString(modifiedList);
-            numbersView.setSelection(finalPosition);
-            System.out.println(numbersView.getSelectionStart());
+        }else if(inSuperscript(numbersView.getSelectionStart())){
+            ArrayList<String> modifiedList = buildModifierList(numbersView.getText().toString());
+            modifiedList.remove(numbersView.getSelectionStart());
+            finalModified = buildString(modifiedList);
+            superscriptArray.get(getRange(numbersView.getSelectionStart()))[1] -= 1;
+            clearInvalidSpans();
         }
 
-        numbersView.setText(Html.fromHtml(finalModified));
-    }
+        updateNumbersView(finalModified);
+        if(numbersView.getText().toString().length() > 0){
+            numbersView.setSelection(finalPosition, finalPosition);
+        }
 
-
-    //Method to update the text being displayed in the TextView, in order to sync it with the contents of
-    //calculationContents
-    private void updateTextView(){
-        numbersView.setText(Html.fromHtml(buildString(calculationContents)));
     }
 
     //-------------------Number button click methods----------------------
@@ -184,8 +193,8 @@ public class MainCalculatorv2 extends AppCompatActivity {
     }
 
     public void exponentClick(View v){
-        addTextInView("<sup>");
-        addTextInView("</sup>");
+        int[] arrayListsAreAssholes = {numbersView.getSelectionStart(), numbersView.getSelectionStart()};
+        superscriptArray.add(arrayListsAreAssholes);
         superScript=true;
     }
 
@@ -205,6 +214,49 @@ public class MainCalculatorv2 extends AppCompatActivity {
     }
 
     //-----------Convenience methods------------
+    private boolean inSuperscript(int index){
+        boolean returnValue = false;
+        for(int[] item :superscriptArray){
+            if(index >= item[0] && index <=item[1]){
+                returnValue = true;
+                break;
+            }
+        }
+        return returnValue;
+    }
+
+    private void updateNumbersView(String addedValue){
+        SpannableStringBuilder addText = new SpannableStringBuilder(addedValue);
+        for(int[] item: superscriptArray){
+            addText.setSpan(new SuperscriptSpan(), item[0], item[1], Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            addText.setSpan(new RelativeSizeSpan(0.75f), item[0], item[1], Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        }
+        numbersView.setText(addText);
+    }
+
+    private int getRange(int index){
+        int returnValue = 0;
+        for(int i = 0; i < superscriptArray.size(); i ++){
+            if(index >= superscriptArray.get(i)[0] && index <= superscriptArray.get(i)[1]){
+                returnValue = i;
+                break;
+            }
+
+            if(superscriptArray.get(i)[0] > superscriptArray.get(i)[1]){
+                superscriptArray.remove(i);
+            }
+        }
+        return returnValue;
+    }
+
+    private void clearInvalidSpans(){
+        for(int[] item: superscriptArray){
+            if(item[0] > item[1]){
+                superscriptArray.remove(item);
+            }
+        }
+    }
+
     private int calcContentLast(){
         return calculationContents.size() -1;
     }
@@ -231,7 +283,6 @@ public class MainCalculatorv2 extends AppCompatActivity {
         //Programmatic representation of the TextView
         numbersView = (EditText)(findViewById(R.id.numbersView));
 
-
         //Attempts to keep the keyboard from launching when the EditText is clicked
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             numbersView.setShowSoftInputOnFocus(false);
@@ -239,8 +290,6 @@ public class MainCalculatorv2 extends AppCompatActivity {
             numbersView.setTextIsSelectable(true);
             //N.B. Accepting the case when non editable text will be selectable
         }
-
-
 
         //Programmatic representation of the exponent button
         exponentButton = (Button)(findViewById(R.id.exponentButton));
@@ -252,9 +301,6 @@ public class MainCalculatorv2 extends AppCompatActivity {
 
         //Set the text view to have the default message
         calculationContents.add(getString(R.string.defaultMessage));
-
-        updateTextView();
-
     }
 
 }
