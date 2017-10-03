@@ -20,13 +20,15 @@ public class MainCalculatorv2 extends AppCompatActivity {
     private static String[] operatorsList = {"+", "-", "/", "*", "sin", "cos", "tan", "(", ")"};
     private static ArrayList<int[]> superscriptArray = new ArrayList<>();
 
+    //TODO Change these to non-static versions
     private static EditText numbersView;
     private static Button exponentButton;
     private static Button decimalButton;
 
     //Array that stores the contents of the TextView
-    private static ArrayList<String> calculationContents = new ArrayList<String>();
+    private static ArrayList<String> calculationContents = new ArrayList<>();
 
+    //TODO Document the purpose of these fields
     private static boolean superScript = false;
     private static boolean instantDelete = true;
     private static boolean subScript = false;
@@ -192,12 +194,13 @@ public class MainCalculatorv2 extends AppCompatActivity {
         addTextInView(".");
     }
 
+    //TODO Document this method
     public void exponentClick(View v){
         int[] arrayListsAreAssholes = {numbersView.getSelectionStart(), numbersView.getSelectionStart()};
         superscriptArray.add(arrayListsAreAssholes);
         superScript=true;
     }
-
+    //TODO Document this method
     public void equalsClick(View v){
         if(superScript){
             superScript = false;
@@ -206,6 +209,7 @@ public class MainCalculatorv2 extends AppCompatActivity {
         }
     }
 
+    //TODO Update this method to the new way of adding super- & subscript
     public void sqrtClick(View v){
         addTextInView(getString(R.string.sqrt));
         addTextInView("<sub>");
@@ -214,6 +218,7 @@ public class MainCalculatorv2 extends AppCompatActivity {
     }
 
     //-----------Convenience methods------------
+    //TODO Document this method
     private boolean inSuperscript(int index){
         boolean returnValue = false;
         for(int[] item :superscriptArray){
@@ -225,6 +230,8 @@ public class MainCalculatorv2 extends AppCompatActivity {
         return returnValue;
     }
 
+
+    //TODO Document this method
     private void updateNumbersView(String addedValue){
         SpannableStringBuilder addText = new SpannableStringBuilder(addedValue);
         for(int[] item: superscriptArray){
@@ -234,6 +241,7 @@ public class MainCalculatorv2 extends AppCompatActivity {
         numbersView.setText(addText);
     }
 
+    //TODO Document this method
     private int getRange(int index){
         int returnValue = 0;
         for(int i = 0; i < superscriptArray.size(); i ++){
@@ -249,6 +257,7 @@ public class MainCalculatorv2 extends AppCompatActivity {
         return returnValue;
     }
 
+    //TODO Document this method
     private void clearInvalidSpans(){
         for(int[] item: superscriptArray){
             if(item[0] > item[1]){
@@ -257,12 +266,9 @@ public class MainCalculatorv2 extends AppCompatActivity {
         }
     }
 
-    private int calcContentLast(){
-        return calculationContents.size() -1;
-    }
-
     //Determine if a string is an operator or a number
     //TODO Add determination for if a string is a trig function
+    //TODO Document this method
     private boolean isOperator(String value){
         if(value.equals("+") || value.equals("/") || value.equals("-") || value.equals("*")
                 || value.equals("sin") || value.equals("cos") || value.equals("tan")
@@ -275,6 +281,8 @@ public class MainCalculatorv2 extends AppCompatActivity {
         }
     }
 
+
+    //TODO Document this method
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
